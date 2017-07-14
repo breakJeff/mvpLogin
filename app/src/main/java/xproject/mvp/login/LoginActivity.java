@@ -1,6 +1,9 @@
 package xproject.mvp.login;
 
 import android.os.Build;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -10,11 +13,17 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import xproject.mvp.base.BaseActivity;
 import xproject.mvp.model.UserInfo;
+import xproject.mvplogin.BuildConfig;
 import xproject.mvplogin.R;
 
 public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View, View.OnClickListener {
@@ -58,6 +67,48 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         editList.add(hobbyEditText);
 
         submitBtn.setOnClickListener(this);
+        if (BuildConfig.DEBUG) {
+//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                    .detectCustomSlowCalls()
+//                    .detectDiskReads()
+//                    .detectDiskWrites()
+//                    .detectNetwork()
+//                    .penaltyDialog()
+//                    .penaltyLog()
+//                    .penaltyFlashScreen()
+//                    .build());
+//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                    .detectLeakedSqlLiteObjects()
+//                    .detectLeakedClosableObjects()
+//                    .detectActivityLeaks()
+//                    .penaltyLog()
+//                    .penaltyDeath()
+//                    .build());
+        }
+        new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    SystemClock.sleep(1000);
+                }
+            }
+        }.start();
+        writeToExternalStorage();
+    }
+
+    public void writeToExternalStorage() {
+        File externalStorage = Environment.getExternalStorageDirectory();
+        File destFile = new File(externalStorage, "dest.txt");
+        try {
+            OutputStream output = new FileOutputStream(destFile, true);
+            output.write("coderunity.com".getBytes());
+            output.flush();
+            output.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
