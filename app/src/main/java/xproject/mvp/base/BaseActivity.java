@@ -12,7 +12,13 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         super.onCreate(savedInstanceState);
         initView();
         presenter = newPresenter();
-        presenter.start();
+        if (presenterEnabled()) {
+            presenter.start();
+        }
+    }
+
+    protected boolean presenterEnabled() {
+        return true;
     }
 
     protected abstract void initView();
